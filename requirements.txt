@@ -1,5 +1,8 @@
 scapy~=2.5.0
 jupyter
-ipywidgets
+notebook~=7.1.2
+ipython~=8.18.1
+ipywidgets~=8.1.2
+numpy
 pandas
-qgridnext
+qgridnext~=2.0.0
