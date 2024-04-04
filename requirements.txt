@@ -1,4 +1,6 @@
 scapy~=2.5.0
+python-can
+pyserial
 jupyter
 notebook~=7.1.2
 ipython~=8.18.1
