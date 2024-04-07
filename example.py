@@ -41,6 +41,9 @@ getLogger("scapy.contrib.isotp").setLevel(INFO)  # set to DEBUG e.g. for more lo
 # can.bus.BusABC.RECV_LOGGING_LEVEL = WARN  # invasive bodge setting to log all received can frames when recv() active
 # that ^^^ can.bus.BusABC.RECV_LOGGING_LEVEL bodge _works_ but not great.
 
+PYTHON_CAN_INTERFACE = "slcan"
+PYTHON_CAN_CHANNEL = "COM29"
+
 def candump_print_stderr(pkt, interface, channel):
     print(
         f'({pkt.time:010.06f}) {interface}{channel} {pkt.identifier:03x}#{pkt.data.hex().ljust(18)}  ; {str(pkt.data)}',
@@ -60,7 +63,7 @@ def sniff_action(pkt, interface, channel):
     candump_print_stderr(pkt, interface, channel)
     return
 
-sniff_csock = CANSocket(bustype="cantact", channel="0", receive_own_messages=False)
+sniff_csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False)
 
 sniffer_started = threading.Event()
 sniffer = AsyncSniffer(opened_socket=sniff_csock,
@@ -73,7 +76,7 @@ sniffer_started.wait(timeout=7.0)  # wait for sniffer to be running
 # end logging setup
 
 # example scapy automotive: ISOTP Send-Receive1. REPLACE THIS WITH YOUR SCRIPTS
-csock = CANSocket(bustype="cantact", channel="0", receive_own_messages=False)
+csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False)
 with ISOTPSocket(csock, tx_id=0x7e1, rx_id=0x7e9, basecls=UDS) as isock:
     resp = isock.sr1(UDS(service=0x33) / bytes([0x12]), timeout=0.250, retry=3)  # retry is a good idea
     if resp is not None:
