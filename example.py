@@ -44,24 +44,29 @@ getLogger("scapy.contrib.isotp").setLevel(INFO)  # set to DEBUG e.g. for more lo
 PYTHON_CAN_INTERFACE = "slcan"
 PYTHON_CAN_CHANNEL = "COM29"
 
+
 def candump_print_stderr(pkt, interface, channel):
     print(
         f'({pkt.time:010.06f}) {interface}{channel} {pkt.identifier:03x}#{pkt.data.hex().ljust(18)}  ; {str(pkt.data)}',
         file=sys.stderr, flush=True)
 
-source = CLIFeeder()
+
+feeder = CLIFeeder()
 wire = WiresharkSink()
-source > wire
-p = PipeEngine(source)
+feeder > wire
+p = PipeEngine(feeder)
 
 # uncomment for CAN logging of the script in wireshark
 p.start()
 
+
 def sniff_action(pkt, interface, channel):
-    source.send(pkt)
+    feeder.send(pkt)
+    wire.f.flush()  # probably only flushes the _previous_ write but that's still better
     # uncomment for CAN logging of the script in candump format on stderr
     candump_print_stderr(pkt, interface, channel)
     return
+
 
 sniff_csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False)
 
@@ -75,9 +80,16 @@ sniffer.start()
 sniffer_started.wait(timeout=7.0)  # wait for sniffer to be running
 # end logging setup
 
+SEND_TO_ID = 0x7e1
+RECV_FR_ID = 0x7e9
+
 # example scapy automotive: ISOTP Send-Receive1. REPLACE THIS WITH YOUR SCRIPTS
-csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False)
-with ISOTPSocket(csock, tx_id=0x7e1, rx_id=0x7e9, basecls=UDS) as isock:
+# ---
+
+csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False,
+                  can_filters=[{'can_id': RECV_FR_ID,
+                                'can_mask': 0x7FF}])  # set 'can_mask' 0x000 to pass all traffic; set to 0x7ff to pass only matched traffic
+with ISOTPSocket(csock, tx_id=SEND_TO_ID, rx_id=RECV_FR_ID, basecls=UDS) as isock:
     resp = isock.sr1(UDS(service=0x33) / bytes([0x12]), timeout=0.250, retry=3)  # retry is a good idea
     if resp is not None:
         print("response: " + str(bytes(resp)))
