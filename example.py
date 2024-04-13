@@ -58,12 +58,12 @@ p = PipeEngine(feeder)
 
 # uncomment for CAN logging of the script in wireshark
 p.start()
-
+time.sleep(6.0)  # wait for pipefeeder and wireshark to warm up
 
 def sniff_action(pkt, interface, channel):
     feeder.send(pkt)
     if wire.f is not None:
-        wire.f.flush()  # probably only flushes the _previous_ write but that's still better
+        wire.f.flush()  # probably only flushes the _previous_ write but that's still better than nothing
     # uncomment for CAN logging of the script in candump format on stderr
     candump_print_stderr(pkt, interface, channel)
     return
@@ -78,7 +78,7 @@ sniffer = AsyncSniffer(opened_socket=sniff_csock,
                        started_callback=sniffer_started.set
                        )
 sniffer.start()
-sniffer_started.wait(timeout=7.0)  # wait for sniffer to be running
+sniffer_started.wait(timeout=14.0)  # wait for sniffer to be running
 # end logging setup
 
 SEND_TO_ID = 0x7e1
@@ -91,9 +91,10 @@ csock = CANSocket(bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, rece
                   can_filters=[{'can_id': RECV_FR_ID,
                                 'can_mask': 0x7FF}])  # set 'can_mask' 0x000 to pass all traffic; set to 0x7ff to pass only matched traffic
 with ISOTPSocket(csock, tx_id=SEND_TO_ID, rx_id=RECV_FR_ID, basecls=UDS) as isock:
-    resp = isock.sr1(UDS(service=0x33) / bytes([0x12]), timeout=1.0, retry=3)  # retry is a good idea
+    resp = isock.sr1(UDS(service=0x33) / bytes([0x12]), timeout=14.0, retry=3)
     if resp is not None:
-        print("response: " + str(bytes(resp)))
+        resp.display()
+        print("response bytes: " + str(bytes(resp)))
     else:
         print("ERROR: NO RESPONSE")
 
@@ -115,5 +116,7 @@ sniff_csock.close()
 sniff_csock.closed = True
 sniff_csock.can_iface._is_shutdown = True
 
+if wire.f is not None:
+    wire.f.flush()
 p.stop()
 p.wait_and_stop()
