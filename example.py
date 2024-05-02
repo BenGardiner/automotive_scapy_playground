@@ -34,6 +34,7 @@ from scapy.pipetool import CLIFeeder, ConsoleSink, PipeEngine
 # logging setup
 from logging import getLogger, WARN, INFO, DEBUG, CRITICAL
 
+getLogger("scapy.contrib.automotive").setLevel(INFO)  # set to DEBUG e.g. for more logging
 getLogger("scapy.contrib.automotive.uds").setLevel(INFO)  # set to DEBUG e.g. for more logging
 getLogger("scapy.contrib.isotp").setLevel(INFO)  # set to DEBUG e.g. for more logging
 
