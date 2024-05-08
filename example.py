@@ -87,7 +87,10 @@ def sniff_action(pkt, interface, channel):
 
 
 sniff_csock = CANSocket(
-    interface=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, bitrate=PYTHON_CAN_BITRATE, receive_own_messages=False
+    interface=PYTHON_CAN_INTERFACE,
+    channel=PYTHON_CAN_CHANNEL,
+    bitrate=PYTHON_CAN_BITRATE,
+    receive_own_messages=False,
 )
 
 sniffer_started = threading.Event()
@@ -112,7 +115,7 @@ csock = CANSocket(
     channel=PYTHON_CAN_CHANNEL,
     bitrate=PYTHON_CAN_BITRATE,
     receive_own_messages=False,
-    can_filters=[{"can_id": RECV_FR_ID, "can_mask": 0x7FF}],
+    can_filters=[{"can_id": RECV_FR_ID, "can_mask": 0x1FFFF}],
 )  # set 'can_mask' 0x000 to pass all traffic; set to 0x7ff to pass only matched traffic
 with ISOTPSocket(csock, tx_id=SEND_TO_ID, rx_id=RECV_FR_ID, basecls=UDS) as isock:
     resp = isock.sr1(UDS(service=0x33) / bytes([0x12]), timeout=14.0, retry=3)
