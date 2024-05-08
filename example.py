@@ -56,6 +56,7 @@ getLogger("scapy.contrib.isotp").setLevel(INFO)  # set to DEBUG e.g. for more lo
 
 PYTHON_CAN_INTERFACE = "slcan"
 PYTHON_CAN_CHANNEL = "COM29"
+PYTHON_CAN_BITRATE = 500_000
 
 
 def candump_print_stderr(pkt, interface, channel):
@@ -86,7 +87,7 @@ def sniff_action(pkt, interface, channel):
 
 
 sniff_csock = CANSocket(
-    bustype=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, receive_own_messages=False
+    interface=PYTHON_CAN_INTERFACE, channel=PYTHON_CAN_CHANNEL, bitrate=PYTHON_CAN_BITRATE, receive_own_messages=False
 )
 
 sniffer_started = threading.Event()
@@ -109,6 +110,7 @@ RECV_FR_ID = SEND_TO_ID + 8
 csock = CANSocket(
     bustype=PYTHON_CAN_INTERFACE,
     channel=PYTHON_CAN_CHANNEL,
+    bitrate=PYTHON_CAN_BITRATE,
     receive_own_messages=False,
     can_filters=[{"can_id": RECV_FR_ID, "can_mask": 0x7FF}],
 )  # set 'can_mask' 0x000 to pass all traffic; set to 0x7ff to pass only matched traffic
