@@ -19,7 +19,7 @@ How to use:
 1. clone this
 2. cd to the cloned directory
 1. install all the python dependencies `python -m pip install -r requirements.txt`
-2. launch jupyter-notebook (this should open a browser automatically) `python -m jupyter notebook`
+2. launch jupyter-notebook (this should open a browser automatically) `python -m jupyter notebook` (or try `python -m notebook` if that doesn't work)
 
 ## The Example Script
 
