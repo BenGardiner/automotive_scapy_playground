@@ -1,7 +1,9 @@
-scapy~=2.6.0rc2
-python-can~=4.3.1
+git+https://github.com/BenGardiner/scapy@copilot/add-j1939socket-transport-layer
+git+https://github.com/hardbyte/python-can@main
 python-can[viewer]
 pyserial
+python-can-candle
+RP1210
 jupyter
 notebook~=7.1.2
 ipython~=8.18.1
