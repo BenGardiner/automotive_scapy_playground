@@ -1,5 +1,5 @@
-git+https://github.com/BenGardiner/scapy@copilot/add-j1939socket-transport-layer
-git+https://github.com/hardbyte/python-can@main
+git+https://github.com/BenGardiner/scapy@57a6e2babbee0aa162614a1168569544fab305f9  # branch: j1939_scanning
+git+https://github.com/hardbyte/python-can@5fa629a39ab12a20fe77347742d0990912772ad1  # branch: main
 python-can[viewer]
 pyserial
 python-can-candle
