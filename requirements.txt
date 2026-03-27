@@ -1,4 +1,4 @@
-git+https://github.com/BenGardiner/scapy@57a6e2babbee0aa162614a1168569544fab305f9  # branch: j1939_scanning
+git+https://github.com/BenGardiner/scapy@fba5c17f566d7e71a6542e84d3506a2889e12793  # branch: j1939_scanning
 git+https://github.com/hardbyte/python-can@5fa629a39ab12a20fe77347742d0990912772ad1  # branch: main
 python-can[viewer]
 pyserial
@@ -8,6 +8,7 @@ jupyter
 notebook~=7.1.2
 ipython~=8.18.1
 ipywidgets~=8.1.2
+ipyaggrid
 numpy
 pandas
 qgridnext~=2.0.0
