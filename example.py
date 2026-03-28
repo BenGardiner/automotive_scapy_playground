@@ -107,13 +107,9 @@ sniffer_started.wait(timeout=14.0)  # wait for sniffer to be running
 
 SEND_TO_ID = 0x7E1
 RECV_FR_ID = SEND_TO_ID + 8
-can_filters = None
-if (
-    PYTHON_CAN_INTERFACE != "pcan"
-):  # workaround python-can bug in pcan driver: can_filters disrupts timing too much for reliable ISO-TP
-    is_extended = RECV_FR_ID > 0x7FF
-    mask = 0x1FFFFFFF if is_extended else 0x7FF
-    can_filters = [{"can_id": RECV_FR_ID, "can_mask": mask, "extended": is_extended}]
+is_extended = RECV_FR_ID > 0x7FF
+mask = 0x1FFFFFFF if is_extended else 0x7FF
+can_filters = [{"can_id": RECV_FR_ID, "can_mask": mask, "extended": is_extended}]
 
 # example scapy automotive: ISOTP Send-Receive1. REPLACE THIS WITH YOUR SCRIPTS
 # ---
