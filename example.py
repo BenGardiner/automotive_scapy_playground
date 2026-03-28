@@ -60,8 +60,9 @@ PYTHON_CAN_BITRATE = 500_000
 
 
 def candump_print_stderr(pkt, interface, channel):
+    can_id_width = 8 if pkt.identifier > 0x7FF else 3
     print(
-        f"({pkt.time:010.06f}) {interface}{channel} {pkt.identifier:03x}#{pkt.data.hex().ljust(18)}  ; {str(pkt.data)}",
+        f"({pkt.time:010.06f}) {interface}{channel} {pkt.identifier:0{can_id_width}x}#{pkt.data.hex().ljust(18)}  ; {str(pkt.data)}",
         file=sys.stderr,
         flush=True,
     )
@@ -73,7 +74,7 @@ feeder > wire
 p = PipeEngine(feeder)
 
 # uncomment for CAN logging of the script in wireshark
-#p.start()
+# p.start()
 time.sleep(6.0)  # wait for pipefeeder and wireshark to warm up
 
 
@@ -107,8 +108,12 @@ sniffer_started.wait(timeout=14.0)  # wait for sniffer to be running
 SEND_TO_ID = 0x7E1
 RECV_FR_ID = SEND_TO_ID + 8
 can_filters = None
-if PYTHON_CAN_INTERFACE != 'pcan':  # workaround python-can bug in pcan driver: can_filters disrupts timing too much for reliable ISO-TP
-    can_filters = [{'can_id': RECV_FR_ID, 'can_mask': 0x1FFFF}]
+if (
+    PYTHON_CAN_INTERFACE != "pcan"
+):  # workaround python-can bug in pcan driver: can_filters disrupts timing too much for reliable ISO-TP
+    is_extended = RECV_FR_ID > 0x7FF
+    mask = 0x1FFFFFFF if is_extended else 0x7FF
+    can_filters = [{"can_id": RECV_FR_ID, "can_mask": mask, "extended": is_extended}]
 
 # example scapy automotive: ISOTP Send-Receive1. REPLACE THIS WITH YOUR SCRIPTS
 # ---
@@ -136,9 +141,9 @@ with ISOTPSocket(csock, tx_id=SEND_TO_ID, rx_id=RECV_FR_ID, basecls=UDS) as isoc
     #
     # let's use this one by default
     req = UDS(service=0x33) / bytes([0x12])  # a mysterious undocumented service
-    
+
     resp = isock.sr1(req, timeout=14.0, retry=3)
-    
+
     if resp is not None:
         resp.display()
         print("response bytes: " + str(bytes(resp)))
