@@ -1,4 +1,4 @@
-git+https://github.com/BenGardiner/scapy@fba5c17f566d7e71a6542e84d3506a2889e12793  # branch: j1939_scanning
+git+https://github.com/BenGardiner/scapy@78a9e74076ac6c4e84f45df9e57f1b44c24adb5e  # branch: j1939_scanning
 git+https://github.com/hardbyte/python-can@5fa629a39ab12a20fe77347742d0990912772ad1  # branch: main
 python-can[viewer]
 pyserial
