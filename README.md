@@ -12,6 +12,7 @@ For a few 'easy'[^1] tasks:
 1. logging some CAN traffic: [`easy_log.ipynb`](easy_log.ipynb)
 2. sending CAN messages and logging: [`easy_send.ipynb`](easy_send.ipynb)
 3. sending and receive a ISO-TP message and response: [`easy_isotp_send.ipynb`](easy_isotp_send.ipynb)
+4. enumerating UDS services and identifiers: [`easy_uds_scanning.ipynb`](easy_uds_scanning.ipynb)
 
 [^1]: 'easy' is very subjective and these tasks will seem much _easier_ once you have done them a few times. Hopefully these notebooks make the first, second and third time _easy_.
 
