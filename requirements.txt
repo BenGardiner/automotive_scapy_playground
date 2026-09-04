@@ -1,4 +1,4 @@
-git+https://github.com/BenGardiner/scapy@d17aeb69b26103986c53250ee8d1285bc390dd32  # branch: j1939_scanning
+git+https://github.com/BenGardiner/scapy@j1939-soft-sockets-again  # branch: j1939-soft-sockets-again
 git+https://github.com/hardbyte/python-can@5fa629a39ab12a20fe77347742d0990912772ad1  # branch: main
 python-can[viewer]
 pyserial
